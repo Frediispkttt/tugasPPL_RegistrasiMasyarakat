@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class AdminApprovalController extends Controller
 {
@@ -46,5 +47,16 @@ class AdminApprovalController extends Controller
         $user->save();
 
         return response()->json(['message' => 'User approved successfully'], 200);
+    }
+
+    public function showStatus()
+    {
+        return view('auth.registrasi-status');
+    }
+
+    public function closeStatus(Request $request)
+    {
+        Auth::logout();
+        return redirect('/'); 
     }
 }

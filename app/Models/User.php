@@ -51,4 +51,9 @@ class User extends Authenticatable
             'date_of_birth' => 'date',
         ];
     }
+
+    public function hasRole($role)
+    {
+        return $this->role === $role;
+    }
 }

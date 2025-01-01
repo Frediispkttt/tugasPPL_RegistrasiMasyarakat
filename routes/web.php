@@ -14,21 +14,22 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/login', [AuthenticatedSessionController::class, 'create'])
-    ->name('login');
+Route::group(['middleware' => 'guest'], function () {
+    Route::get('/login', [AuthenticatedSessionController::class, 'create'])
+        ->name('login');
 
-Route::post('/login', [AuthenticatedSessionController::class, 'store']);
+    Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 
-Route::get('/register', [RegisteredUserController::class, 'create'])
-    ->name('register');
+    Route::get('/register', [RegisteredUserController::class, 'create'])
+        ->name('register');
 
-Route::post('/register', [RegisteredUserController::class, 'store']);
+    Route::post('/register', [RegisteredUserController::class, 'store']);
+});
 
 Route::put('/new-password/update', [NewPasswordController::class, 'update'])->name('new-password.update');
 
-    Route::get('/registration-status', function () {
-        return view('auth.registrasi-status'); 
-    })->name('registration-status');
+    Route::get('/registration-status', [AdminApprovalController::class, 'showStatus'])->name('registration-status');
+    Route::post('/close-registration-status', [AdminApprovalController::class, 'closeStatus'])->name('close-registration-status');
     
     Route::get('/dashboard', function () {
         return view('dashboard');
@@ -40,7 +41,7 @@ Route::put('/new-password/update', [NewPasswordController::class, 'update'])->na
     
     Route::put('/password/update', [PasswordController::class, 'update'])->name('password.update');
 
-    Route::middleware(['auth', 'role.status:masyarakat'])->group(function () {
+    Route::group(['middleware' => 'auth'], function () {
         Route::get('/masyarakat/dashboard', function () {
             return view('masyarakat.dashboard');
         })->name('masyarakat.dashboard');
@@ -49,7 +50,7 @@ Route::put('/new-password/update', [NewPasswordController::class, 'update'])->na
         Route::patch('/masyarakat/profile', [ProfileController::class, 'update'])->name('masyarakat.profile.update');
     });
 
-    Route::middleware(['auth', 'role.status:admin'])->group(function () {
+    Route::group(['middleware' => 'isAdmin'], function () {
         Route::get('/admin/dashboard', function () {
             return view('admin.dashboard');
         })->name('admin.dashboard');
@@ -65,25 +66,25 @@ Route::put('/new-password/update', [NewPasswordController::class, 'update'])->na
 
 
 
-    // TS-01: Test Registrasi Pengguna
-    Route::post('/test-register', [TestAuthController::class, 'register'])->name('register');
+    // // TS-01: Test Registrasi Pengguna
+    // Route::post('/test-register', [TestAuthController::class, 'register'])->name('register');
 
-    // TS-02: Test Melihat Status Registrasi
-    Route::middleware('auth')->get('/test-registration-status', [TestAuthController::class, 'registrationStatus'])->name('registration.status');
+    // // TS-02: Test Melihat Status Registrasi
+    // Route::middleware('auth')->get('/test-registration-status', [TestAuthController::class, 'registrationStatus'])->name('registration.status');
 
-    // TS-03: Test Approval Registrasi oleh Admin
-    Route::middleware(['auth', 'role:admin'])->post('/admin/test-approve-registration', [AdminApprovalController::class, 'approveRegistration'])->name('admin.approve.registration');
+    // // TS-03: Test Approval Registrasi oleh Admin
+    // Route::middleware(['auth', 'role:admin'])->post('/admin/test-approve-registration', [AdminApprovalController::class, 'approveRegistration'])->name('admin.approve.registration');
 
-    // TS-04: Test Login Pengguna
-    Route::post('/test-login', [TestAuthController::class, 'login'])->name('login');
+    // // TS-04: Test Login Pengguna
+    // Route::post('/test-login', [TestAuthController::class, 'login'])->name('login');
 
-    // TS-05: Test Mengubah Password Pengguna
-    Route::middleware('auth')->post('/test-change-password', [TestAuthController::class, 'changePassword'])->name('change.password');
+    // // TS-05: Test Mengubah Password Pengguna
+    // Route::middleware('auth')->post('/test-change-password', [TestAuthController::class, 'changePassword'])->name('change.password');
 
-    // TS-06: Test Fitur Lupa Password
-    Route::post('/test-forgot-password', [TestAuthController::class, 'forgotPassword'])->name('forgot.password');
+    // // TS-06: Test Fitur Lupa Password
+    // Route::post('/test-forgot-password', [TestAuthController::class, 'forgotPassword'])->name('forgot.password');
 
-    // TS-07: Test Melengkapi Profil Pengguna
-    Route::middleware('auth')->post('/test-complete-profile', [TestAuthController::class, 'completeProfile'])->name('complete.profile');
+    // // TS-07: Test Melengkapi Profil Pengguna
+    // Route::middleware('auth')->post('/test-complete-profile', [TestAuthController::class, 'completeProfile'])->name('complete.profile');
 
 require __DIR__.'/auth.php';

@@ -37,7 +37,11 @@
                             </p> 
                             
                             <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                                <a  href="/" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-lg">Go to Landing Page</a>
+                                <form action="{{ route('close-registration-status') }}" method="POST">
+                                    @csrf
+                            
+                                    <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-lg">Go to Landing Page</button>
+                                </form>
                             </div>
             
                             </div>
