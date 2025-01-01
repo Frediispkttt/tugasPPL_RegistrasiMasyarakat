@@ -19,9 +19,9 @@
     <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
             <div class="container">
-                <a class="navbar-brand me-2" href="https://mdbgo.com/">
+                <a class="navbar-brand me-2" href="/">
                     <img
-                    src="https://mdbcdn.b-cdn.net/img/logo/mdb-transaprent-noshadows.webp"
+                    src="{{ asset('img/e-waste.png') }}"
                     height="16"
                     alt="MDB Logo"
                     loading="lazy"
